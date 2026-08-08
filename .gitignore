@@ -1,0 +1,7 @@
+venv/
+__pycache__/
+*.pyc
+.env
+.vercel
+model/atm_model.pkl
+data/atm_transactions.csv

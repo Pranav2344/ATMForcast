@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ATMForcast | Cash Demand Forecasting</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+</head>
+<body>
+
+<div class="app-shell">
+
+  <header class="topbar">
+    <div class="brand">
+      <span class="brand-mark">ATM</span><span class="brand-rest">forcast</span>
+    </div>
+    <div class="tagline"> Cash Demand Forecasting</div>
+  </header>
+
+  <main class="dashboard">
+
+    <section class="control-panel">
+      <div class="control-group">
+        <label for="atmSelect">Select ATM</label>
+        <select id="atmSelect">
+          {% for atm in atm_list %}
+          <option value="{{ atm }}">{{ atm }}</option>
+          {% endfor %}
+        </select>
+      </div>
+
+      <div class="control-group">
+        <label for="horizonSelect">Forecast Horizon</label>
+        <select id="horizonSelect">
+          <option value="7">7 Days</option>
+          <option value="14">14 Days</option>
+          <option value="30">30 Days</option>
+        </select>
+      </div>
+
+      <button id="forecastBtn" class="btn-primary">Generate Forecast</button>
+    </section>
+
+    <section class="upload-panel">
+      <div class="chart-header">
+        <h2>Update Dataset</h2>
+      </div>
+      <div class="upload-row">
+        <input type="file" id="csvUpload" accept=".csv">
+        <button id="uploadBtn" class="btn-secondary">Upload & Retrain</button>
+        <span id="uploadStatus"></span>
+      </div>
+    </section>
+
+    <section class="stats-row">
+      <div class="stat-card">
+        <div class="stat-label">Avg. Predicted Demand / Day</div>
+        <div class="stat-value" id="avgDemand">—</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-label">Total Forecasted Demand</div>
+        <div class="stat-value" id="totalDemand">—</div>
+      </div>
+      <div class="stat-card highlight">
+        <div class="stat-label">Recommended Cash Load</div>
+        <div class="stat-value" id="recommendedCash">—</div>
+      </div>
+    </section>
+
+    <section class="chart-panel">
+      <div class="chart-header">
+        <h2>Withdrawal Trend & Forecast</h2>
+        <div class="legend">
+          <span class="legend-item"><i class="dot dot-actual"></i>Actual (last 30 days)</span>
+          <span class="legend-item"><i class="dot dot-forecast"></i>Forecast</span>
+        </div>
+      </div>
+      <canvas id="mainChart" height="90"></canvas>
+    </section>
+
+    <section class="comparison-panel">
+      <div class="chart-header">
+        <h2>ATM Comparison — Refill Priority (Next 7 Days)</h2>
+      </div>
+      <table id="comparisonTable">
+        <thead>
+          <tr>
+            <th>Rank</th>
+            <th>ATM ID</th>
+            <th>Total Forecasted Demand</th>
+            <th>Recommended Cash Load</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+    <section class="table-panel">
+      <div class="chart-header">
+        <h2>Forecast Breakdown</h2>
+        <button id="downloadBtn" class="btn-secondary">Download Report (CSV)</button>
+      </div>
+      <table id="forecastTable">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Predicted Cash Demand</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>ATMForcast —powered forecasting</span>
+  </footer>
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
