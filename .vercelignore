@@ -1,5 +1,8 @@
+# Exclude large folders
 data/
 model/
-static/
-tests/
-.git/
+
+# Keep essential code
+!index.py
+!templates/
+!static/
