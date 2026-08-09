@@ -103,9 +103,9 @@ def retrain_and_save(df):
     X = engineered[FEATURE_COLS]
     y = engineered["cash_withdrawn"]
 
-    model = XGBRegressor(
-        n_estimators=400, max_depth=6, learning_rate=0.05,
-        subsample=0.8, colsample_bytree=0.8, random_state=42
+    model = HistGradientBoostingRegressor(
+    max_iter=400, max_depth=6, learning_rate=0.05,
+    random_state=42
     )
     model.fit(X, y)
 
