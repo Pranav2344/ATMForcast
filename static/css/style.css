@@ -354,3 +354,58 @@ tbody td:first-child {
     grid-template-columns: 1fr;
   }
 }
+/* ---------- Risk Indicators ---------- */
+.indicator-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-right: 8px;
+  vertical-align: middle;
+}
+
+.indicator-high { background: #e5484d; }
+.indicator-medium { background: #ffa552; }
+.indicator-low { background: #4cc38a; }
+
+.indicator-label {
+  font-size: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  padding: 2px 8px;
+  border-radius: 10px;
+  display: inline-block;
+}
+
+.indicator-label.high {
+  color: #e5484d;
+  background: rgba(229, 72, 77, 0.12);
+}
+
+.indicator-label.medium {
+  color: #ffa552;
+  background: rgba(255, 165, 82, 0.12);
+}
+
+.indicator-label.low {
+  color: #4cc38a;
+  background: rgba(76, 195, 138, 0.12);
+}
+
+/* ---------- Risk Legend ---------- */
+.risk-legend {
+  display: flex;
+  gap: 14px;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px solid var(--border-soft);
+}
+
+.risk-legend-item {
+  font-size: 10px;
+  color: var(--grey-500);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
