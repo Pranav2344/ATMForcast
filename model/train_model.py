@@ -10,7 +10,7 @@ import joblib
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
-from xgboost import XGBRegressor
+from sklearn.ensemble import HistGradientBoostingRegressor
 
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -67,14 +67,12 @@ def train():
         X, y, test_size=0.2, shuffle=False  # keep time order for realistic eval
     )
 
-    print("🧠 Training XGBoost model...")
-    model = XGBRegressor(
-        n_estimators=400,
-        max_depth=6,
-        learning_rate=0.05,
-        subsample=0.8,
-        colsample_bytree=0.8,
-        random_state=42
+    print("Training XGBoost model...")
+    model = HistGradientBoostingRegressor(
+    max_iter=400,
+    max_depth=6,
+    learning_rate=0.05,
+    random_state=42
     )
     model.fit(X_train, y_train)
 
