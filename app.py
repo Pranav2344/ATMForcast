@@ -166,6 +166,7 @@ def forecast_all():
     results.sort(key=lambda x: x["total_demand"], reverse=True)
 
     return jsonify({"horizon_days": horizon, "atms": results})
+
 @app.route("/api/upload-dataset", methods=["POST"])
 def upload_dataset():
     """
@@ -198,7 +199,7 @@ def upload_dataset():
     sys.path.append(os.path.join(BASE_DIR, "model"))
     from train_model import load_and_engineer_features
     from sklearn.preprocessing import LabelEncoder
-    from xgboost import XGBRegressor
+    from sklearn.ensemble import HistGradientBoostingRegressor
     import joblib as jb
 
     engineered, le = load_and_engineer_features(DATA_PATH)
@@ -206,9 +207,9 @@ def upload_dataset():
     X = engineered[feature_cols_local]
     y = engineered["cash_withdrawn"]
 
-    new_model = XGBRegressor(
-        n_estimators=400, max_depth=6, learning_rate=0.05,
-        subsample=0.8, colsample_bytree=0.8, random_state=42
+    new_model = HistGradientBoostingRegressor(
+        max_iter=400, max_depth=6, learning_rate=0.05,
+        random_state=42
     )
     new_model.fit(X, y)
 
@@ -224,5 +225,6 @@ def upload_dataset():
         "total_rows": len(combined_df),
         "atms": sorted(combined_df["atm_id"].unique().tolist())
     })
+
 if __name__ == "__main__":
     app.run(debug=True, port=5000)
