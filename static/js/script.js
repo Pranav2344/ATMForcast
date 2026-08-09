@@ -3,6 +3,7 @@
    ============================================ */
 
 let mainChart = null;
+let lastForecastData = null; // stores the most recent forecast for export
 
 const atmSelect = document.getElementById("atmSelect");
 const horizonSelect = document.getElementById("horizonSelect");
@@ -16,6 +17,18 @@ const tableBody = document.querySelector("#forecastTable tbody");
 function formatCurrency(value) {
   return "₹" + Number(value).toLocaleString("en-IN", { maximumFractionDigits: 0 });
 }
+
+function getRiskLevel(value, avg) {
+  if (value > avg * 1.15) return "high";
+  if (value < avg * 0.85) return "low";
+  return "medium";
+}
+
+const RISK_COLORS = {
+  high: "#e5484d",
+  medium: "#ffa552",
+  low: "#4cc38a"
+};
 
 async function fetchHistory(atmId) {
   const res = await fetch(`/api/history/${atmId}`);
@@ -32,11 +45,27 @@ async function fetchForecast(atmId, days) {
 function renderChart(historyDates, historyValues, forecastDates, forecastValues) {
   const ctx = document.getElementById("mainChart").getContext("2d");
 
+  const avg = forecastValues.reduce((a, b) => a + b, 0) / forecastValues.length;
+
   // Bridge point: connect the last actual value to the first forecast point
   const bridgedForecastValues = [
     ...new Array(historyValues.length - 1).fill(null),
     historyValues[historyValues.length - 1],
     ...forecastValues
+  ];
+
+  // Color each forecast point (plus the bridge point) by its risk level
+  const bridgePointColor = "#a8a8a8"; // neutral color for the bridge point (last actual)
+  const forecastPointColors = forecastValues.map(v => RISK_COLORS[getRiskLevel(v, avg)]);
+  const allPointColors = [
+    ...new Array(historyValues.length - 1).fill(null),
+    bridgePointColor,
+    ...forecastPointColors
+  ];
+  const allPointRadii = [
+    ...new Array(historyValues.length - 1).fill(0),
+    3,
+    ...new Array(forecastValues.length).fill(4)
   ];
 
   const actualValues = [...historyValues, ...new Array(forecastValues.length).fill(null)];
@@ -52,9 +81,9 @@ function renderChart(historyDates, historyValues, forecastDates, forecastValues)
         {
           label: "Actual",
           data: actualValues,
-          borderColor: "#a8a8a8",
-          backgroundColor: "rgba(168,168,168,0.08)",
-          borderWidth: 2,
+          borderColor: "#8a8a8a",
+          backgroundColor: "rgba(138,138,138,0.06)",
+          borderWidth: 1.5,
           pointRadius: 0,
           tension: 0.3,
           fill: true
@@ -62,12 +91,13 @@ function renderChart(historyDates, historyValues, forecastDates, forecastValues)
         {
           label: "Forecast",
           data: bridgedForecastValues,
-          borderColor: "#ffffff",
-          backgroundColor: "rgba(255,255,255,0.06)",
-          borderWidth: 2,
-          borderDash: [6, 4],
-          pointRadius: 3,
-          pointBackgroundColor: "#ffffff",
+          borderColor: "#f5f5f5",
+          backgroundColor: "rgba(245,245,245,0.04)",
+          borderWidth: 1.5,
+          borderDash: [5, 3],
+          pointRadius: allPointRadii,
+          pointBackgroundColor: allPointColors,
+          pointBorderColor: allPointColors,
           tension: 0.3,
           fill: true
         }
@@ -79,24 +109,30 @@ function renderChart(historyDates, historyValues, forecastDates, forecastValues)
       plugins: {
         legend: { display: false },
         tooltip: {
-          backgroundColor: "#1e1e1e",
-          borderColor: "#2c2c2c",
+          backgroundColor: "#191919",
+          borderColor: "#2a2a2a",
           borderWidth: 1,
-          titleColor: "#ffffff",
-          bodyColor: "#ececec",
+          titleColor: "#f5f5f5",
+          bodyColor: "#d4d4d4",
           callbacks: {
-            label: (ctx) => ctx.raw !== null ? formatCurrency(ctx.raw) : ""
+            label: (ctx) => {
+              if (ctx.raw === null) return "";
+              const level = getRiskLevel(ctx.raw, avg);
+              const levelLabel = level === "high" ? "High demand" : level === "low" ? "Low demand" : "Moderate";
+              return `${formatCurrency(ctx.raw)} — ${levelLabel}`;
+            }
           }
         }
       },
       scales: {
         x: {
-          ticks: { color: "#6b6b6b", maxRotation: 0, autoSkip: true, maxTicksLimit: 10 },
+          ticks: { color: "#8a8a8a", maxRotation: 0, autoSkip: true, maxTicksLimit: 10, font: { size: 10 } },
           grid: { color: "#1e1e1e" }
         },
         y: {
           ticks: {
-            color: "#6b6b6b",
+            color: "#8a8a8a",
+            font: { size: 10 },
             callback: (val) => "₹" + (val / 1000) + "k"
           },
           grid: { color: "#1e1e1e" }
@@ -108,9 +144,18 @@ function renderChart(historyDates, historyValues, forecastDates, forecastValues)
 
 function renderTable(dates, values) {
   tableBody.innerHTML = "";
+  const avg = values.reduce((a, b) => a + b, 0) / values.length;
+
   dates.forEach((date, i) => {
+    const level = getRiskLevel(values[i], avg);
+    const levelText = level === "high" ? "High" : level === "low" ? "Low" : "Medium";
+
     const row = document.createElement("tr");
-    row.innerHTML = `<td>${date}</td><td>${formatCurrency(values[i])}</td>`;
+    row.innerHTML = `
+      <td>${date}</td>
+      <td>${formatCurrency(values[i])}</td>
+      <td><span class="indicator-label ${level}">${levelText}</span></td>
+    `;
     tableBody.appendChild(row);
   });
 }
@@ -140,7 +185,7 @@ async function runForecast() {
     renderChart(history.dates, history.values, forecast.dates, forecast.values);
     renderTable(forecast.dates, forecast.values);
     updateStats(forecast.values, forecast.recommended_cash_load);
-    lastForecastData = forecast; 
+    lastForecastData = forecast;
   } catch (err) {
     console.error(err);
     alert("Something went wrong while generating the forecast. Check the console/server logs.");
@@ -158,6 +203,7 @@ window.addEventListener("DOMContentLoaded", () => {
     runForecast();
   }
 });
+
 async function fetchComparison(days = 7) {
   const res = await fetch(`/api/forecast-all?days=${days}`);
   if (!res.ok) throw new Error("Failed to fetch comparison data");
@@ -168,14 +214,21 @@ function renderComparisonTable(atms) {
   const body = document.querySelector("#comparisonTable tbody");
   body.innerHTML = "";
 
+  const totals = atms.map(a => a.total_demand);
+  const avg = totals.reduce((a, b) => a + b, 0) / totals.length;
+
   atms.forEach((atm, index) => {
     const rank = index + 1;
+    const level = getRiskLevel(atm.total_demand, avg);
+    const levelText = level === "high" ? "High" : level === "low" ? "Low" : "Medium";
+
     const row = document.createElement("tr");
     row.innerHTML = `
       <td><span class="rank-badge ${rank === 1 ? 'top' : ''}">${rank}</span></td>
       <td>${atm.atm_id}</td>
       <td>${formatCurrency(atm.total_demand)}</td>
       <td>${formatCurrency(atm.recommended_cash_load)}</td>
+      <td><span class="indicator-label ${level}">${levelText}</span></td>
     `;
     body.appendChild(row);
   });
@@ -194,7 +247,6 @@ async function loadComparison() {
 window.addEventListener("DOMContentLoaded", () => {
   loadComparison();
 });
-let lastForecastData = null; // stores the most recent forecast for export
 
 function downloadCSV() {
   if (!lastForecastData) {
@@ -222,6 +274,7 @@ function downloadCSV() {
 }
 
 document.getElementById("downloadBtn").addEventListener("click", downloadCSV);
+
 document.getElementById("uploadBtn").addEventListener("click", async () => {
   const fileInput = document.getElementById("csvUpload");
   const statusEl = document.getElementById("uploadStatus");
