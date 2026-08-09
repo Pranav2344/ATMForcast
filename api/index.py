@@ -97,15 +97,15 @@ def engineer_features(df):
 
 def retrain_and_save(df):
     """Retrains the model on the given dataframe and saves it to Blob storage."""
-    from xgboost import XGBRegressor
+    from sklearn.ensemble import HistGradientBoostingRegressor
 
     engineered, le = engineer_features(df)
     X = engineered[FEATURE_COLS]
     y = engineered["cash_withdrawn"]
 
     model = HistGradientBoostingRegressor(
-    max_iter=400, max_depth=6, learning_rate=0.05,
-    random_state=42
+        max_iter=400, max_depth=6, learning_rate=0.05,
+        random_state=42
     )
     model.fit(X, y)
 
