@@ -10,6 +10,7 @@ import joblib
 import pandas as pd
 import numpy as np
 from datetime import timedelta
+from sklearn.ensemble import HistGradientBoostingRegressor
 from flask import Flask, render_template, request, jsonify
 import vercel_blob
 
