@@ -1,5 +1,5 @@
 /* ============================================
-   ATMForcast — Professional Theme
+   ATMForcast — Dense Professional Theme
    ============================================ */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500&display=swap');
@@ -9,7 +9,7 @@
   --panel: #151515;
   --panel-alt: #191919;
   --border: #2a2a2a;
-  --border-soft: #232323;
+  --border-soft: #212121;
   --grey-500: #8a8a8a;
   --grey-400: #a3a3a3;
   --grey-200: #d4d4d4;
@@ -18,8 +18,8 @@
   --font-main: 'Inter', -apple-system, sans-serif;
   --font-mono: 'IBM Plex Mono', monospace;
 
-  --radius: 4px;
-  --transition: all 0.15s ease;
+  --radius: 3px;
+  --transition: all 0.12s ease;
 }
 
 * {
@@ -32,14 +32,15 @@ body {
   background: var(--black);
   color: var(--grey-200);
   font-family: var(--font-main);
-  font-size: 14px;
+  font-size: 13px;
+  line-height: 1.4;
   min-height: 100vh;
 }
 
 .app-shell {
-  max-width: 1080px;
+  max-width: 1040px;
   margin: 0 auto;
-  padding: 0 24px 60px;
+  padding: 0 20px 40px;
 }
 
 /* ---------- Topbar ---------- */
@@ -47,13 +48,13 @@ body {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  padding: 32px 0 20px;
+  padding: 20px 0 14px;
   border-bottom: 1px solid var(--border);
-  margin-bottom: 24px;
+  margin-bottom: 14px;
 }
 
 .brand {
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 700;
   letter-spacing: -0.01em;
 }
@@ -68,35 +69,35 @@ body {
 }
 
 .tagline {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--grey-500);
   text-transform: uppercase;
-  letter-spacing: 0.08em;
+  letter-spacing: 0.07em;
 }
 
 /* ---------- Control Panel ---------- */
 .control-panel {
   display: flex;
   align-items: flex-end;
-  gap: 20px;
+  gap: 14px;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 16px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
 }
 
 .control-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 4px;
 }
 
 .control-group label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.05em;
   color: var(--grey-500);
 }
 
@@ -105,10 +106,10 @@ select {
   color: var(--grey-200);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 8px 12px;
+  padding: 6px 10px;
   font-family: var(--font-main);
-  font-size: 13px;
-  min-width: 150px;
+  font-size: 12px;
+  min-width: 130px;
   cursor: pointer;
   transition: var(--transition);
 }
@@ -123,10 +124,10 @@ select:hover, select:focus {
   color: var(--black);
   border: none;
   border-radius: var(--radius);
-  padding: 9px 20px;
+  padding: 7px 16px;
   font-family: var(--font-main);
   font-weight: 600;
-  font-size: 13px;
+  font-size: 12px;
   cursor: pointer;
   transition: var(--transition);
   margin-left: auto;
@@ -146,23 +147,23 @@ select:hover, select:focus {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 18px 20px;
-  margin-bottom: 16px;
+  padding: 12px 14px;
+  margin-bottom: 10px;
 }
 
 .upload-row {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
 }
 
 input[type="file"] {
   color: var(--grey-400);
-  font-size: 12px;
+  font-size: 11px;
 }
 
 #uploadStatus {
-  font-size: 12px;
+  font-size: 11px;
   color: var(--grey-500);
 }
 
@@ -172,8 +173,8 @@ input[type="file"] {
   color: var(--grey-200);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 7px 14px;
-  font-size: 12px;
+  padding: 5px 12px;
+  font-size: 11px;
   font-weight: 500;
   font-family: var(--font-main);
   cursor: pointer;
@@ -189,15 +190,15 @@ input[type="file"] {
 .stats-row {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 12px;
-  margin-bottom: 16px;
+  gap: 10px;
+  margin-bottom: 10px;
 }
 
 .stat-card {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 16px 18px;
+  padding: 12px 14px;
 }
 
 .stat-card.highlight {
@@ -206,43 +207,43 @@ input[type="file"] {
 }
 
 .stat-label {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 500;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--grey-500);
-  margin-bottom: 8px;
+  margin-bottom: 5px;
 }
 
 .stat-value {
   font-family: var(--font-mono);
-  font-size: 20px;
+  font-size: 17px;
   font-weight: 500;
   color: var(--white);
 }
 
-/* ---------- Chart Panel ---------- */
+/* ---------- Chart / Comparison / Table Panels ---------- */
 .chart-panel,
 .comparison-panel,
 .table-panel {
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 20px;
-  margin-bottom: 16px;
+  padding: 14px 16px;
+  margin-bottom: 10px;
 }
 
 .chart-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 16px;
-  padding-bottom: 12px;
+  margin-bottom: 10px;
+  padding-bottom: 8px;
   border-bottom: 1px solid var(--border-soft);
 }
 
 .chart-header h2 {
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 600;
   color: var(--grey-200);
   text-transform: uppercase;
@@ -251,20 +252,20 @@ input[type="file"] {
 
 .legend {
   display: flex;
-  gap: 16px;
+  gap: 12px;
 }
 
 .legend-item {
-  font-size: 11px;
+  font-size: 10px;
   color: var(--grey-500);
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 5px;
 }
 
 .dot {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
   border-radius: 50%;
   display: inline-block;
 }
@@ -272,12 +273,7 @@ input[type="file"] {
 .dot-actual { background: var(--grey-500); }
 .dot-forecast { background: var(--white); }
 
-/* ---------- Table Panel ---------- */
-.table-panel h2 {
-  font-size: 13px;
-  font-weight: 600;
-}
-
+/* ---------- Table ---------- */
 table {
   width: 100%;
   border-collapse: collapse;
@@ -285,18 +281,18 @@ table {
 
 thead th {
   text-align: left;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.04em;
   color: var(--grey-500);
-  padding: 8px 10px;
+  padding: 6px 8px;
   border-bottom: 1px solid var(--border);
 }
 
 tbody td {
-  padding: 10px;
-  font-size: 13px;
+  padding: 6px 8px;
+  font-size: 12px;
   border-bottom: 1px solid var(--border-soft);
   font-family: var(--font-mono);
   color: var(--grey-200);
@@ -318,14 +314,14 @@ tbody td:first-child {
 
 .rank-badge {
   display: inline-block;
-  width: 20px;
-  height: 20px;
-  line-height: 20px;
+  width: 18px;
+  height: 18px;
+  line-height: 18px;
   text-align: center;
   border-radius: 50%;
   background: var(--panel-alt);
   border: 1px solid var(--border);
-  font-size: 11px;
+  font-size: 10px;
   font-family: var(--font-mono);
 }
 
@@ -338,10 +334,10 @@ tbody td:first-child {
 /* ---------- Footer ---------- */
 .footer {
   text-align: center;
-  margin-top: 32px;
-  padding-top: 16px;
+  margin-top: 20px;
+  padding-top: 12px;
   border-top: 1px solid var(--border);
-  font-size: 11px;
+  font-size: 10px;
   color: var(--grey-500);
 }
 
